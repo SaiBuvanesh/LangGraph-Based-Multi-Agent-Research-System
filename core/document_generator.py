@@ -189,4 +189,4 @@ class Generator:
 
         prs.save(self.pptx_path)
         return self.pptx_path
-        print(f"✅ Presentation saved as {self.pptx_path}")
+        print(f"Presentation saved as {self.pptx_path}")

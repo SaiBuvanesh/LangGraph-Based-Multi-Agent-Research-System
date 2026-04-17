@@ -276,9 +276,9 @@ else:
         st.subheader("Finalize & Proceed")
         
         # Primary Action: Start Research
-        if st.button("🚀 Start Deep Research", type="primary", use_container_width=True, 
+        if st.button("Start Deep Research", type="primary", use_container_width=True, 
                      help="Finalize the current team and begin the full research orchestration."):
-            with st.status("🚀 Launching Deep Research...", expanded=True) as status:
+            with st.status("Launching Deep Research...", expanded=True) as status:
                 st.write("Initializing agent interviews...")
                 st.write("Conducting web searches and technical deep-dives...")
                 st.write("Synthesizing findings and writing report...")
@@ -295,7 +295,7 @@ else:
         st.markdown("<br>", unsafe_allow_html=True)
 
         # Secondary Action: Refine Team (Optional)
-        with st.expander("🔄 Optional: Adjust Research Team & Focus"):
+        with st.expander("Optional: Adjust Research Team & Focus"):
             st.markdown("If you're not satisfied with the selected analysts, provide specific guidance to swap roles or add expertise.")
             feedback = st.text_area("Guidance", label_visibility="collapsed",
                                    placeholder="e.g., 'Add a cybersecurity expert' or 'Focus more on economic impact'...",
@@ -303,7 +303,7 @@ else:
             
             if st.button("Refine Analysts & Roles", use_container_width=True):
                 if feedback.strip():
-                    with st.status("🔄 Refining Team...", expanded=True) as status:
+                    with st.status("Refining Team...", expanded=True) as status:
                         result = run_research_step(feedback=feedback.strip())
                         
                         if result:
