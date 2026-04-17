@@ -32,7 +32,7 @@ def get_llm():
         model=model, 
         temperature=0.7,
         openai_api_key=api_key,
-        api_base=api_base,
+        base_url=api_base,
         max_retries=5,
         timeout=60,
     )
