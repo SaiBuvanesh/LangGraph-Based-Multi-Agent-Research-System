@@ -13,8 +13,10 @@ The core idea is to move beyond "reading" and start **interrogating**. The agent
 
 ---
 
-## Project Demo
-[**Watch the Project Demo Video**](Project%20Demo.mp4)
+## Live Experience
+[**Launch DeepResearch Engine**](https://langgraph-based-multi-agent-research-system.streamlit.app/)
+
+Check out the live deployment to see the agents in action!
 
 ---
 
@@ -34,7 +36,7 @@ The engine is built on a stack designed for absolute execution stability and hig
 
 ### Professional Presentation
 - **Streamlit**: A clean, responsive interface that provides real-time visibility into the research team's progress and the "human-in-the-loop" refinement stage.
-- **Multi-Format Export**: Custom export logic for DOCX, PPTX, and PDF (via docx2pdf with Windows COM support), ensuring your results are ready for the boardroom.
+- **Multi-Format Export**: Custom export logic for DOCX, PPTX, and PDF, ensuring your results are ready for professional presentation across any platform.
 
 ---
 

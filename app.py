@@ -131,10 +131,13 @@ with st.sidebar:
     st.header("Configuration")
     
     with st.container():
-        topic = st.text_input("Research Topic", "The Future of AI Agents")
-        max_analysts = st.slider("Number of Analysts", min_value=1, max_value=5, value=2)
+        topic = st.text_input("Research Topic", "The Future of AI Agents", 
+                             help="Primary subject or theme you want the research team to investigate in depth.")
+        max_analysts = st.slider("Number of Analysts", min_value=1, max_value=5, value=2,
+                                help="Controls the size of your research team. More analysts provide broader perspectives but take longer.")
         template_prompt = st.text_area("Custom Instructions", height=150, 
-                                      placeholder="Optional: Provide specific focus areas or guidelines for the research team.")
+                                      placeholder="Optional: Provide specific focus areas or guidelines for the research team.",
+                                      help="Specific constraints, desired focus areas, or formatting requirements for the final report.")
     
     st.markdown("---")
     
