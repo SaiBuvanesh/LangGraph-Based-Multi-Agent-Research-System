@@ -4,7 +4,7 @@ from docx import Document
 from pptx import Presentation
 from pptx.enum.text import PP_ALIGN
 from pptx.dml.color import RGBColor
-from docx2pdf import convert
+from fpdf import FPDF
 from pptx.util import Inches, Pt
 from markdown import markdown
 from bs4 import BeautifulSoup
@@ -28,19 +28,48 @@ class Generator:
         
         doc.save(self.docx_path)
         return self.docx_path
-        print("✅ DOCX saved!")
         
 
     def generate_pdf(self, content):
-        import pythoncom
-        pythoncom.CoInitialize()
-        try:
-            self.generate_doc(content=content)
-            convert(self.docx_path, self.pdf_path)
-        finally:
-            pythoncom.CoUninitialize()
+        """Generates a PDF using fpdf2 (cross-platform)."""
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        
+        # Set title font
+        pdf.set_font("helvetica", "B", 16)
+        pdf.cell(0, 10, "DeepResearch - Research Report", ln=True, align="C")
+        pdf.set_draw_color(46, 116, 181) # Professional Blue
+        pdf.line(10, 22, 200, 22)
+        pdf.ln(10)
+
+        # Basic HTML/Markdown to PDF logic
+        # We'll use a simplified version to avoid BeautifulSoup complex overhead here
+        # but robust enough for the research output.
+        html = markdown(content)
+        soup = BeautifulSoup(html, "html.parser")
+
+        for element in soup.find_all(['h1', 'h2', 'h3', 'p', 'li']):
+            if element.name == 'h1':
+                pdf.set_font("helvetica", "B", 14)
+                pdf.ln(5)
+                pdf.multi_cell(0, 10, element.get_text())
+                pdf.ln(2)
+            elif element.name in ['h2', 'h3']:
+                pdf.set_font("helvetica", "B", 12)
+                pdf.ln(3)
+                pdf.multi_cell(0, 8, element.get_text())
+                pdf.ln(1)
+            elif element.name == 'li':
+                pdf.set_font("helvetica", "", 11)
+                pdf.multi_cell(0, 7, f"• {element.get_text()}")
+            else: # paragraphs
+                pdf.set_font("helvetica", "", 11)
+                pdf.multi_cell(0, 7, element.get_text())
+                pdf.ln(2)
+
+        pdf.output(self.pdf_path)
         return self.pdf_path
-        print("✅ PDF created!")
 
     def generate_pptx(self, content):
         html = markdown(content)

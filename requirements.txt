@@ -1,7 +1,7 @@
 # Requires Python 3.10+
 streamlit
 nest_asyncio
-watchdogs
+watchdog
 sniffio
 anyio
 pydantic
@@ -16,5 +16,5 @@ wikipedia
 markdown
 python-docx
 python-pptx
-docx2pdf
+fpdf2
 beautifulsoup4

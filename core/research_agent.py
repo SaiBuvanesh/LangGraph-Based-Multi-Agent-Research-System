@@ -17,13 +17,22 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.types import RetryPolicy
 from .utils import sanitize_messages
 
-load_dotenv()
 def get_llm():
+    # Use os.getenv for better handling on Streamlit Cloud
+    model = os.getenv("MODEL", "gpt-4o") # Default to a safe model if not specified
+    api_key = os.getenv("NOVITA_API_KEY") or os.getenv("OPENAI_API_KEY")
+    api_base = os.getenv("OPENAI_BASE") or "https://api.openai.com/v1"
+
+    if not api_key:
+        import streamlit as st
+        st.error("API Key missing! Please set NOVITA_API_KEY or OPENAI_API_KEY in your secrets.")
+        st.stop()
+
     llm = ChatOpenAI(
-        model=os.environ["MODEL"], 
+        model=model, 
         temperature=0.7,
-        openai_api_key=os.environ["NOVITA_API_KEY"],
-        openai_api_base=os.environ["OPENAI_BASE"],
+        openai_api_key=api_key,
+        api_base=api_base,
         max_retries=5,
         timeout=60,
     )
