@@ -13,7 +13,7 @@ The core idea is to move beyond "reading" and start **interrogating**. The agent
 
 ---
 
-## Live Experience
+## Live Demo
 [**Launch DeepResearch Engine**](https://langgraph-based-multi-agent-research-system.streamlit.app/)
 
 Check out the live deployment to see the agents in action!

@@ -102,7 +102,7 @@ class InterviewBuilder:
         
         try:
             analysts = parser.parse(response.content)
-            return {"analysts": analysts.analysts}
+            return {"analysts": analysts.analysts, "human_analyst_feedback": None}
         except Exception as e:
             print(f"[ERROR] Failed to parse analysts: {e}")
             # Fallback: try to find JSON in the response
@@ -111,7 +111,7 @@ class InterviewBuilder:
                 json_match = re.search(r'\{.*\}', response.content, re.DOTALL)
                 if json_match:
                     analysts = parser.parse(json_match.group(0))
-                    return {"analysts": analysts.analysts}
+                    return {"analysts": analysts.analysts, "human_analyst_feedback": None}
             except:
                 pass
             raise e

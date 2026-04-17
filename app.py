@@ -295,8 +295,15 @@ else:
                     result = run_research_step(feedback=feedback_val)
                     
                     if result:
-                        st.session_state.final_report = result.get("final_report", "No report generated.")
-                        status.update(label="Research Complete", state="complete", expanded=False)
+                        if feedback_val:
+                            # Feedback provided: Graph looped back to analysts. Update UI state.
+                            st.session_state.analysts = result.get("analysts")
+                            status.update(label="Analysts Refined", state="complete", expanded=False)
+                        else:
+                            # No feedback: Graph proceeded to conclusion.
+                            st.session_state.final_report = result.get("final_report", "No report generated.")
+                            status.update(label="Research Complete", state="complete", expanded=False)
+                        
                         st.rerun()
                     else:
                         status.update(label="Research Failed", state="error")
