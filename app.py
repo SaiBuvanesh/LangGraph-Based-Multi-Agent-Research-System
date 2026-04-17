@@ -257,17 +257,19 @@ else:
         st.subheader("Research Team")
         st.markdown("The following analysts have been selected to research your topic. You may provide guidance to refine their focus.")
         
-        # Display Analysts in a grid
-        cols = st.columns(len(st.session_state.analysts))
-        
-        for i, analyst in enumerate(st.session_state.analysts):
-            with cols[i]:
-                st.markdown(f"""
-                <div class="analyst-card">
-                    <div class="analyst-name" style="color: #2E74B5; font-size: 1.1rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 0.5rem; margin-bottom: 1rem;">{analyst.role}</div>
-                    <div class="analyst-desc">{analyst.description}</div>
-                </div>
-                """, unsafe_allow_html=True)
+        # Display Analysts in a grid (Max 2 per row)
+        for i in range(0, len(st.session_state.analysts), 2):
+            cols = st.columns(2)
+            for j in range(2):
+                if i + j < len(st.session_state.analysts):
+                    analyst = st.session_state.analysts[i + j]
+                    with cols[j]:
+                        st.markdown(f"""
+                        <div class="analyst-card">
+                            <div class="analyst-name" style="color: #2E74B5; font-size: 1.1rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 0.5rem; margin-bottom: 1rem;">{analyst.role}</div>
+                            <div class="analyst-desc">{analyst.description}</div>
+                        </div>
+                        """, unsafe_allow_html=True)
         
         st.markdown("<br>", unsafe_allow_html=True)
         
@@ -275,26 +277,7 @@ else:
         st.markdown("---")
         st.subheader("Finalize & Proceed")
         
-        # Primary Action: Start Research
-        if st.button("Start Deep Research", type="primary", use_container_width=True, 
-                     help="Finalize the current team and begin the full research orchestration."):
-            with st.status("Launching Deep Research...", expanded=True) as status:
-                st.write("Initializing agent interviews...")
-                st.write("Conducting web searches and technical deep-dives...")
-                st.write("Synthesizing findings and writing report...")
-                
-                result = run_research_step(feedback=None) # No feedback means start research
-                
-                if result:
-                    st.session_state.final_report = result.get("final_report", "No report generated.")
-                    status.update(label="Research Complete", state="complete", expanded=False)
-                    st.rerun()
-                else:
-                    status.update(label="Research Failed", state="error")
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        # Secondary Action: Refine Team (Optional)
+        # Secondary Action: Refine Team (Optional) - Moved Above
         with st.expander("Optional: Adjust Research Team & Focus"):
             st.markdown("If you're not satisfied with the selected analysts, provide specific guidance to swap roles or add expertise.")
             feedback = st.text_area("Guidance", label_visibility="collapsed",
@@ -313,7 +296,26 @@ else:
                         else:
                             status.update(label="Refinement Failed", state="error")
                 else:
-                    st.warning("Please enter feedback to refine the team, or click the primary 'Start Deep Research' button above.")
+                    st.warning("Please enter feedback to refine the team, or click 'Start Deep Research' below.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Primary Action: Start Research - Moved Below
+        if st.button("Start Deep Research", type="primary", use_container_width=True, 
+                     help="Finalize the current team and begin the full research orchestration."):
+            with st.status("Launching Deep Research...", expanded=True) as status:
+                st.write("Initializing agent interviews...")
+                st.write("Conducting web searches and technical deep-dives...")
+                st.write("Synthesizing findings and writing report...")
+                
+                result = run_research_step(feedback=None) # No feedback means start research
+                
+                if result:
+                    st.session_state.final_report = result.get("final_report", "No report generated.")
+                    status.update(label="Research Complete", state="complete", expanded=False)
+                    st.rerun()
+                else:
+                    status.update(label="Research Failed", state="error")
 
 
 if st.session_state.final_report:
