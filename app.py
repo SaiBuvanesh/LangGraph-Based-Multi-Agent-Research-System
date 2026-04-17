@@ -271,42 +271,49 @@ else:
         
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # Feedback Form
-        with st.form("feedback_form"):
-            st.subheader("Analyst Guidance")
-            feedback = st.text_area("Guidance", label_visibility="collapsed",
-                                   placeholder="Enter feedback or specific questions for the analysts...",
-                                   help="Leave empty to proceed with the current research plan.")
-            
-            col1, col2 = st.columns([1, 5])
-            with col1:
-                submitted = st.form_submit_button("Proceed")
-            
-            if submitted:
-                feedback_val = feedback if feedback.strip() else None
+        # --- Phase 2: Action Center ---
+        st.markdown("---")
+        st.subheader("Finalize & Proceed")
+        
+        # Primary Action: Start Research
+        if st.button("🚀 Start Deep Research", type="primary", use_container_width=True, 
+                     help="Finalize the current team and begin the full research orchestration."):
+            with st.status("🚀 Launching Deep Research...", expanded=True) as status:
+                st.write("Initializing agent interviews...")
+                st.write("Conducting web searches and technical deep-dives...")
+                st.write("Synthesizing findings and writing report...")
                 
-                with st.status(" conducting research...", expanded=True) as status:
-                    st.write(" conducting interviews with experts...")
-                    st.write(" gathering external resources...")
-                    st.write(" synthesizing findings...")
-                    st.write(" compiling final report...")
-                    
-                    # Run the final step
-                    result = run_research_step(feedback=feedback_val)
-                    
-                    if result:
-                        if feedback_val:
-                            # Feedback provided: Graph looped back to analysts. Update UI state.
+                result = run_research_step(feedback=None) # No feedback means start research
+                
+                if result:
+                    st.session_state.final_report = result.get("final_report", "No report generated.")
+                    status.update(label="Research Complete", state="complete", expanded=False)
+                    st.rerun()
+                else:
+                    status.update(label="Research Failed", state="error")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Secondary Action: Refine Team (Optional)
+        with st.expander("🔄 Optional: Adjust Research Team & Focus"):
+            st.markdown("If you're not satisfied with the selected analysts, provide specific guidance to swap roles or add expertise.")
+            feedback = st.text_area("Guidance", label_visibility="collapsed",
+                                   placeholder="e.g., 'Add a cybersecurity expert' or 'Focus more on economic impact'...",
+                                   help="Enter feedback to re-generate the research team.")
+            
+            if st.button("Refine Analysts & Roles", use_container_width=True):
+                if feedback.strip():
+                    with st.status("🔄 Refining Team...", expanded=True) as status:
+                        result = run_research_step(feedback=feedback.strip())
+                        
+                        if result:
                             st.session_state.analysts = result.get("analysts")
                             status.update(label="Analysts Refined", state="complete", expanded=False)
+                            st.rerun()
                         else:
-                            # No feedback: Graph proceeded to conclusion.
-                            st.session_state.final_report = result.get("final_report", "No report generated.")
-                            status.update(label="Research Complete", state="complete", expanded=False)
-                        
-                        st.rerun()
-                    else:
-                        status.update(label="Research Failed", state="error")
+                            status.update(label="Refinement Failed", state="error")
+                else:
+                    st.warning("Please enter feedback to refine the team, or click the primary 'Start Deep Research' button above.")
 
 
 if st.session_state.final_report:
